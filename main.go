@@ -7,7 +7,9 @@ import (
 	"os"
 	"time"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"github.com/bwmarrin/discordgo"
 )
@@ -16,6 +18,7 @@ import (
 var (
 	ChannelID string
 	Filepath  string
+	Message   *widget.Label
 )
 
 type Comment struct {
@@ -37,10 +40,14 @@ func main() {
 	// Fyne
 	myApp := app.New()
 	myWindow := myApp.NewWindow("Discord Niconico Comment Generator")
+	myWindow.Resize(fyne.NewSize(300, 400))
 
 	channelID := widget.NewEntry()
 	filepath := widget.NewEntry()
 	token := widget.NewEntry()
+
+	status := widget.NewLabel("DisConnected.")
+	Message = widget.NewLabel("")
 
 	var dg *discordgo.Session
 
@@ -54,10 +61,17 @@ func main() {
 			ChannelID = channelID.Text
 			Filepath = filepath.Text
 			dg = connect(token.Text)
+			status.SetText("Connected.")
 		},
 	}
 
-	myWindow.SetContent(form)
+	content := container.NewVBox(
+		form,
+		status,
+		Message,
+	)
+
+	myWindow.SetContent(content)
 	myWindow.ShowAndRun()
 
 	// Cleanly close down the Discord session.
@@ -112,7 +126,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Handle:  m.Author.Username,
 		Message: m.Content,
 	}
-	fmt.Println(comment)
+	commentBuf, _ := xml.Marshal(comment)
+	Message.SetText(string(commentBuf))
 
 	data, _ := os.ReadFile(Filepath)
 	comments := CommentXml{}
