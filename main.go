@@ -16,8 +16,9 @@ import (
 
 // Variables used for command line parameters
 var (
-	Filepath string
-	Token    string
+	ChannelID string
+	Filepath  string
+	Token     string
 )
 
 type Comment struct {
@@ -36,7 +37,8 @@ type CommentXml struct {
 
 func init() {
 
-	flag.StringVar(&Filepath, "filepath", "", "The filepath of comment.xml")
+	flag.StringVar(&ChannelID, "channelId", "", "Channel ID to track")
+	flag.StringVar(&Filepath, "filepath", "", "Filepath of comment.xml")
 	flag.StringVar(&Token, "token", "", "Discord Bot Token")
 	flag.Parse()
 }
@@ -82,7 +84,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// Ignore all messages created by the bot itself
 	// This isn't required in this specific example but it's a good practice.
-	if m.Author.ID == s.State.User.ID {
+	if m.Author.ID == s.State.User.ID || m.ChannelID != ChannelID {
 		return
 	}
 
