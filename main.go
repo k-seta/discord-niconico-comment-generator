@@ -3,13 +3,12 @@ package main
 import (
 	"bytes"
 	"encoding/xml"
-	"flag"
 	"fmt"
 	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
+	"fyne.io/fyne/v2/app"
+	"fyne.io/fyne/v2/widget"
 	"github.com/bwmarrin/discordgo"
 )
 
@@ -17,7 +16,6 @@ import (
 var (
 	ChannelID string
 	Filepath  string
-	Token     string
 )
 
 type Comment struct {
@@ -34,21 +32,44 @@ type CommentXml struct {
 	Log     []Comment `xml:"comment"`
 }
 
-func init() {
-
-	flag.StringVar(&ChannelID, "channelId", "", "Channel ID to track")
-	flag.StringVar(&Filepath, "filepath", "", "Filepath of comment.xml")
-	flag.StringVar(&Token, "token", "", "Discord Bot Token")
-	flag.Parse()
-}
-
 func main() {
 
+	// Fyne
+	myApp := app.New()
+	myWindow := myApp.NewWindow("Discord Niconico Comment Generator")
+
+	channelID := widget.NewEntry()
+	filepath := widget.NewEntry()
+	token := widget.NewEntry()
+
+	var dg *discordgo.Session
+
+	form := &widget.Form{
+		Items: []*widget.FormItem{ // we can specify items in the constructor
+			{Text: "Channel ID", Widget: channelID},
+			{Text: "Filepath", Widget: filepath},
+			{Text: "Discord Token", Widget: token},
+		},
+		OnSubmit: func() { // optional, handle form submission
+			ChannelID = channelID.Text
+			Filepath = filepath.Text
+			dg = connect(token.Text)
+		},
+	}
+
+	myWindow.SetContent(form)
+	myWindow.ShowAndRun()
+
+	// Cleanly close down the Discord session.
+	dg.Close()
+}
+
+func connect(token string) *discordgo.Session {
 	// Create a new Discord session using the provided bot token.
-	dg, err := discordgo.New("Bot " + Token)
+	dg, err := discordgo.New("Bot " + token)
 	if err != nil {
 		fmt.Println("error creating Discord session,", err)
-		return
+		return nil
 	}
 
 	// Register the messageCreate func as a callback for MessageCreate events.
@@ -61,17 +82,10 @@ func main() {
 	err = dg.Open()
 	if err != nil {
 		fmt.Println("error opening connection,", err)
-		return
+		return nil
 	}
 
-	// Wait here until CTRL-C or other term signal is received.
-	fmt.Println("Bot is now running.  Press CTRL-C to exit.")
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
-	<-sc
-
-	// Cleanly close down the Discord session.
-	dg.Close()
+	return dg
 }
 
 // This function will be called (due to AddHandler above) every time a new
