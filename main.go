@@ -104,5 +104,5 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	buf.Write([]byte(xml.Header))
 	b, _ := xml.MarshalIndent(comments, "", "  ")
 	buf.Write(b)
-	fmt.Println(buf.String())
+	os.WriteFile("comment.xml", buf.Bytes(), 0666)
 }
