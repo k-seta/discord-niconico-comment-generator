@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
+	"github.com/kurehajime/flagstone"
 )
 
 // Variables used for command line parameters
@@ -39,6 +40,9 @@ func init() {
 }
 
 func main() {
+
+	// start Web GUI
+	flagstone.Launch("Discord NicoNico Comment Generator", "comment.xml generator for NiCommentGenerator")
 
 	// Create a new Discord session using the provided bot token.
 	dg, err := discordgo.New("Bot " + Token)
