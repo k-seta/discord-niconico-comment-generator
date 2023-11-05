@@ -4,6 +4,11 @@ github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0U
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
 github.com/gorilla/websocket v1.5.1 h1:gmztn0JnHVt9JZquRuzLw3g4wouNVzKL15iLr/zn/QY=
 github.com/gorilla/websocket v1.5.1/go.mod h1:x3kM2JMyaluk02fnUJpQuwD2dCS5NDG2ZHL0uE0tcaY=
+github.com/icza/gowut v1.4.0 h1:OwUKBXP20Iw3EgghXznRyuohMM5hG9zID9bU1n+a6+U=
+github.com/icza/gowut v1.4.0/go.mod h1:0bLWFdhY/FxwCx2nDrezL87kfFgPfwZn9GytsrUPM8U=
+github.com/kami-zh/go-capturer v0.0.0-20171211120116-e492ea43421d/go.mod h1:P2viExyCEfeWGU259JnaQ34Inuec4R38JCyBx2edgD0=
+github.com/kurehajime/flagstone v1.1.0 h1:BwdGmeK3QUN7GYBnIxtgMcahE42Y/P6U0WkuiYdXrDc=
+github.com/kurehajime/flagstone v1.1.0/go.mod h1:e40VbA0oOCj90B7uYkix4xC9N940i03Eoqe1wyPk0sk=
 golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b h1:7mWr3k41Qtv8XlltBkDkl8LoP3mpSgBW8BUoxtEdbXg=
 golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b/go.mod h1:T9bdIzuCu7OtxOm1hfPfRQxPLYneinmdGuTeoZ9dtd4=
 golang.org/x/crypto v0.14.0 h1:wBqGXzWJW6m1XrIKlAH0Hs1JJ7+9KBwnIO8v66Q9cHc=
