@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 )
@@ -14,6 +15,19 @@ import (
 var (
 	Token string
 )
+
+type Comment struct {
+	No      uint32 `xml:"no,attr"`
+	Time    int64  `xml:"time,attr"`
+	Owner   int    `xml:"owner,attr"`
+	Service string `xml:"service,attr"`
+	Handle  string `xml:"handle,attr"`
+	Message string `xml:"comment"`
+}
+
+type CommentXml struct {
+	Log []Comment `xml:"log"`
+}
 
 func init() {
 
@@ -67,4 +81,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.Content == "ping" {
 		s.ChannelMessageSend(m.ChannelID, "Pong!")
 	}
+
+	comment := Comment{
+		No:      0,
+		Time:    time.Now().Unix(),
+		Owner:   0,
+		Service: "discord",
+		Handle:  m.Author.Username,
+		Message: m.Content,
+	}
+	fmt.Println(comment)
 }
