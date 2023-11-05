@@ -39,6 +39,8 @@ func main() {
 
 	// Fyne
 	myApp := app.New()
+	myApp.Settings().SetTheme(&myTheme{})
+
 	myWindow := myApp.NewWindow("Discord Niconico Comment Generator")
 	myWindow.Resize(fyne.NewSize(300, 400))
 
