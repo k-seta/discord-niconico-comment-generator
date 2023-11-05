@@ -96,9 +96,11 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	fmt.Println(comment)
 
-	comments := CommentXml{
-		Log: []Comment{comment},
-	}
+	data, _ := os.ReadFile("comment.xml")
+	comments := CommentXml{}
+	xml.Unmarshal(data, &comments)
+
+	comments.Log = append(comments.Log, comment)
 
 	var buf bytes.Buffer
 	buf.Write([]byte(xml.Header))
