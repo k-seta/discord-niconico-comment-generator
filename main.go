@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/xml"
 	"flag"
 	"fmt"
 	"os"
@@ -22,11 +24,12 @@ type Comment struct {
 	Owner   int    `xml:"owner,attr"`
 	Service string `xml:"service,attr"`
 	Handle  string `xml:"handle,attr"`
-	Message string `xml:"comment"`
+	Message string `xml:",innerxml"`
 }
 
 type CommentXml struct {
-	Log []Comment `xml:"log"`
+	XMLName xml.Name  `xml:"log"`
+	Log     []Comment `xml:"comment"`
 }
 
 func init() {
@@ -82,6 +85,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.ChannelMessageSend(m.ChannelID, "Pong!")
 	}
 
+	// generate xml
 	comment := Comment{
 		No:      0,
 		Time:    time.Now().Unix(),
@@ -91,4 +95,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		Message: m.Content,
 	}
 	fmt.Println(comment)
+
+	comments := CommentXml{
+		Log: []Comment{comment},
+	}
+
+	var buf bytes.Buffer
+	buf.Write([]byte(xml.Header))
+	b, _ := xml.MarshalIndent(comments, "", "  ")
+	buf.Write(b)
+	fmt.Println(buf.String())
 }
