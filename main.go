@@ -16,7 +16,8 @@ import (
 
 // Variables used for command line parameters
 var (
-	Token string
+	Filepath string
+	Token    string
 )
 
 type Comment struct {
@@ -35,7 +36,8 @@ type CommentXml struct {
 
 func init() {
 
-	flag.StringVar(&Token, "t", "", "Bot Token")
+	flag.StringVar(&Filepath, "filepath", "", "The filepath of comment.xml")
+	flag.StringVar(&Token, "token", "", "Discord Bot Token")
 	flag.Parse()
 }
 
@@ -100,7 +102,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 	fmt.Println(comment)
 
-	data, _ := os.ReadFile("comment.xml")
+	data, _ := os.ReadFile(Filepath)
 	comments := CommentXml{}
 	xml.Unmarshal(data, &comments)
 
@@ -110,5 +112,5 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	buf.Write([]byte(xml.Header))
 	b, _ := xml.MarshalIndent(comments, "", "  ")
 	buf.Write(b)
-	os.WriteFile("comment.xml", buf.Bytes(), 0666)
+	os.WriteFile(Filepath, buf.Bytes(), 0666)
 }
